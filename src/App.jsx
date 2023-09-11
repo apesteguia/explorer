@@ -8,6 +8,7 @@ import { Files } from "./components/Files";
 export default function BasicAppBar() {
   const [dirs, setDirs] = createSignal([]);
   const [title, setTitle] = createSignal("");
+  const [history, setHistory] = createSignal([]);
 
   const displayDirs = async () => {
     const res = await invoke("display_dirs");
@@ -21,6 +22,13 @@ export default function BasicAppBar() {
     console.log(title());
   };
 
+  const handleRefresh = (data) => {
+    if (data) {
+      displayDirs();
+      getTitle();
+    }
+  };
+
   onMount(async () => {
     await getTitle();
     await displayDirs();
@@ -28,9 +36,9 @@ export default function BasicAppBar() {
 
   return (
     <div className="absolute inset-0 flex w-full min-h-full h-auto bg-slate-950 text-white">
-      <Navbar title={title()} />
+      <Navbar onClickBack={handleRefresh} title={title()} />
       <Sidebar />
-      <Files dirs={dirs()} />
+      <Files onDataFromChild={handleRefresh} dirs={dirs()} />
       <div className="-z-10 cubrir  inset-0 border-slate-700 border"></div>
     </div>
   );
