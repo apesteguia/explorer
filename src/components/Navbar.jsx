@@ -5,9 +5,11 @@ import { Breadcrumbs, Link } from "@suid/material";
 import { IconSearch } from "@tabler/icons-solidjs";
 import { IconMenu2 } from "@tabler/icons-solidjs";
 import { invoke } from "@tauri-apps/api";
+import clickOutside from "../functions/clickOutside";
 
 export default function Navbar(props) {
-  const [back, setBack] = createSignal(false);
+  const [search, setSearch] = createSignal("");
+  const [toggleSearch, setToggleSearch] = createSignal(false);
   const [data, setData] = createSignal(false);
   const [history, setHistory] = createSignal([]);
 
@@ -17,6 +19,20 @@ export default function Navbar(props) {
       .slice(0, index + 1)
       .join("/");
     handleClick(folderPath);
+  };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    setToggleSearch(false);
+    let folderName = search();
+    invoke("go_dir", { folderName });
+    props.onDataFromChild(true);
+    aux.push(folderName);
+    setHistory(aux);
   };
 
   const handleClick = (folderName) => {
@@ -51,34 +67,69 @@ export default function Navbar(props) {
   };
 
   return (
-    <div className="border border-slate-700 inset-0 fixed w-full h-[30px] flex items-center gap-3">
+    <div className="border  border-gray-700 inset-0 fixed w-full h-[30px] flex items-center gap-3">
       <div className="navigation flex gap-3 ml-3">
-        <button onClick={handleBack}>
+        <button
+          className="rounded-full flex items-center justify-center hover:bg-gray-700 transition duration-300 "
+          onClick={handleBack}
+        >
           <IconArrowLeft />
         </button>
-        <button onClick={handleFront}>
+        <button
+          className="rounded-full flex items-center justify-center hover:bg-gray-700 transition duration-300 "
+          onClick={handleFront}
+        >
           <IconArrowRight />
         </button>
       </div>
-      <Breadcrumbs className="text-white text-sm z-10" aria-label="breadcrumb">
-        <For each={props.title.split("/")}>
-          {(t, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                handleClickFolder(i());
-              }}
-              className="hover:underline "
-            >
-              <button>{t}</button>
-            </div>
-          )}
-        </For>
-      </Breadcrumbs>
 
-      <button className="absolute right-14">
-        <IconSearch size={20} className="" />
-      </button>
+      {!toggleSearch() ? (
+        <div>
+          <Breadcrumbs
+            className="text-white text-sm z-10"
+            aria-label="breadcrumb"
+          >
+            <For each={props.title.split("/")}>
+              {(t, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    handleClickFolder(i());
+                  }}
+                  className=""
+                >
+                  <button className="hover:underline rounded-lg transition duration-300 hover:bg-zinc-600 bg-zinc-700 pl-2 pr-2">
+                    {t}
+                  </button>
+                </div>
+              )}
+            </For>
+          </Breadcrumbs>
+          <button
+            onClick={() => setToggleSearch(true)}
+            className="absolute -mt-5 right-14"
+          >
+            <IconSearch size={20} className="" />
+          </button>
+        </div>
+      ) : (
+        <form
+          onSubmit={handleForm}
+          className="border   border-zinc-600  flex w-[90%] bg-zinc-800 overflow-hidden rounded-md focus:bg-zinc-700"
+          use:clickOutside={setToggleSearch(false)}
+        >
+          <IconSearch
+            className="bg-zinc-700 indent-3 rounded-full flex items-center justify-center p-1 "
+            size={20}
+          />
+          <input
+            onChange={handleSearch}
+            type="text"
+            value={props.title}
+            className="bg-zinc-800 indent-3 rounded-sm transition duration-300  w-full outline-none text-white text-sm "
+          />
+        </form>
+      )}
 
       <button className="absolute right-5">
         <IconMenu2 size={20} className="" />

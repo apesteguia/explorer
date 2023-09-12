@@ -54,24 +54,24 @@ export function Files(props) {
   return (
     <div
       onMouseMove={handlePos}
-      className="overflow-x-scroll overflow-y-scroll border border-slate-700 fixed top-[30px] left-[25%] w-[75%] h-[calc(100%-30px)]"
+      className="overflow-x-scroll overflow-y-scroll border border-gray-700 fixed top-[30px] left-[25%] w-[75%] h-[calc(100%-30px)]"
     >
       {menu() ? (
         <div
           use:clickOutside={() => setMenu(false)}
-          className="border border-slate-700 bg-slate-950 -ml-60 absolute w-[150px] h-auto gap-0 flex flex-col "
+          className="menu border border-gray-700 bg-zinc-900 -ml-60 absolute w-[150px] h-auto gap-0 flex flex-col rounded-xl overflow-hidden"
           style={{ top: `${menuPos().y}px`, left: `calc(${menuPos().x}px)` }}
         >
           <button
             onClick={() => readFile(selected())}
-            className="text-left  h-[40px] text-sm hover:bg-slate-700"
+            className="text-left  h-[40px] text-sm hover:bg-slate-700 transition duration-300"
           >
             <p className="ml-5">Open</p>
           </button>
-          <button className="text-left  h-[40px] text-sm hover:bg-slate-700">
+          <button className="text-left  h-[40px] text-sm hover:bg-slate-700  transition duration-300">
             <p className="ml-5">Change name</p>
           </button>
-          <button className="text-left  h-[40px] text-sm hover:bg-red-600">
+          <button className="text-left  h-[40px] text-sm font-bold hover:bg-red-600  transition duration-300">
             <p className="ml-5">Delete</p>
           </button>
         </div>
@@ -89,7 +89,7 @@ export function Files(props) {
               {(dir, i) => (
                 <button
                   key={i}
-                  className="focus:bg-slate-600 flex  w-screen min-h-[45px] items-center  border-slate-700 border-l-0 border-r-0 border-t-0 transition duration-300 ease-in-out hover:bg-slate-800"
+                  className="focus:bg-slate-600 flex  w-screen min-h-[45px] items-center  border-gray-700 border-l-0 border-r-0 border-t-0 transition duration-300 hover:bg-slate-800"
                 >
                   {dir[1] === "File" ? (
                     <div
@@ -99,7 +99,7 @@ export function Files(props) {
                       }}
                       onClick={() => setSelected(props.title + "/" + dir[0])}
                       onDblClick={() => readFile(props.title + "/" + dir[0])}
-                      className="ml-2 w-full folder flex items-center gap-3 text-sm"
+                      className="ml-2 w-full folder flex items-center gap-3 text-sm transition duration-300 "
                     >
                       <img src={FileIcon} className="w-[40px] h-[40px]" />
                       <p className="truncate">{dir[0]}</p>
@@ -107,7 +107,7 @@ export function Files(props) {
                   ) : (
                     <div
                       onDblClick={() => handleClick(dir[0])}
-                      className="ml-2 w-full folder flex items-center gap-3 text-sm"
+                      className="ml-2 w-full folder flex items-center gap-3 text-sm transition duration-300"
                     >
                       <img src={FolderIcon} className="w-[40px] h-[40px]" />
                       <p className="truncate">{dir[0]}</p>
@@ -125,8 +125,8 @@ export function Files(props) {
           use:clickOutside={() => setOpenFileContent(false)}
           className="flex flex-col"
         >
-          <div className="fixed flex  w-full h-[27px]  items-center  bg-slate-950">
-            <div className="flex gap-3 items-center justify-center w-auto border border-r-0 border-t-0 border-l-0 border-b-cyan-600 hover:bg-slate-700  ">
+          <div className="fixed flex  w-full h-[27px]  items-center  bg-zinc-900">
+            <div className="flex gap-3 items-center justify-center w-auto border border-r-0 border-t-0 border-l-0 border-b-cyan-600 hover:bg-slate-700   ">
               <h1 className="font-bold ml-2 ">{fileName()}</h1>
               <button
                 className=" flex items-center justify-center"

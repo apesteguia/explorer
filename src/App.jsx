@@ -37,7 +37,7 @@ export default function BasicAppBar() {
   });
 
   return (
-    <div className="absolute inset-0 flex w-full min-h-full h-auto bg-slate-950 text-white">
+    <div className="absolute inset-0 flex w-full min-h-full h-auto bg-zinc-900 text-white">
       <Navbar
         onDataFromChild={handleRefresh}
         onClickBack={handleRefresh}
@@ -49,7 +49,7 @@ export default function BasicAppBar() {
       ) : (
         <p className="absolute inset-2/4 w-full -mt-5 ml-5">Empty directory</p>
       )}
-      <div className="-z-10 cubrir  inset-0 border-slate-700 border"></div>
+      <div className="-z-10 cubrir  inset-0 border-gray-700700 border"></div>
     </div>
   );
 }
