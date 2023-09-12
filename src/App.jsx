@@ -13,16 +13,15 @@ export default function BasicAppBar() {
   const displayDirs = async () => {
     const res = await invoke("display_dirs");
     setDirs(res);
-    console.log(dirs());
   };
 
   const getTitle = async () => {
     const res = await invoke("get_dir_string");
     setTitle(res);
-    console.log(title());
   };
 
   const handleRefresh = (data) => {
+    console.log("HOla", data);
     if (data) {
       displayDirs();
       getTitle();
@@ -36,7 +35,11 @@ export default function BasicAppBar() {
 
   return (
     <div className="absolute inset-0 flex w-full min-h-full h-auto bg-slate-950 text-white">
-      <Navbar onClickBack={handleRefresh} title={title()} />
+      <Navbar
+        onDataFromChild={handleRefresh}
+        onClickBack={handleRefresh}
+        title={title()}
+      />
       <Sidebar />
       <Files onDataFromChild={handleRefresh} dirs={dirs()} />
       <div className="-z-10 cubrir  inset-0 border-slate-700 border"></div>

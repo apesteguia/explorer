@@ -8,7 +8,14 @@ import { invoke } from "@tauri-apps/api";
 
 export default function Navbar(props) {
   const [back, setBack] = createSignal(false);
-  const [lastdir, setLastdir] = createSignal("");
+  const [data, setData] = createSignal(false);
+
+  const handleClick = (folderName) => {
+    invoke("go_dir", { folderName });
+    setData(true);
+    props.onDataFromChild(data());
+    setData(false);
+  };
 
   const handleBack = async () => {
     await invoke("go_back");
@@ -29,7 +36,20 @@ export default function Navbar(props) {
       </div>
       <Breadcrumbs className="text-white text-sm z-10" aria-label="breadcrumb">
         <For each={props.title.split("/")}>
-          {(t, i) => <button className="hover:underline">{t}</button>}
+          {(t, i) => (
+            <button
+              onClick={() => {
+                const folderPath = props.title
+                  .split("/")
+                  .slice(0, i() + 1)
+                  .join("/");
+                handleClick(folderPath);
+              }}
+              className="hover:underline"
+            >
+              {t}
+            </button>
+          )}
         </For>
       </Breadcrumbs>
 
