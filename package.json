@@ -16,6 +16,9 @@
     "@suid/vite-plugin": "^0.1.4",
     "@tabler/icons-solidjs": "^2.34.0",
     "@tauri-apps/api": "^1.4.0",
+    "highlight.js": "^11.8.0",
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.29.0",
     "solid-js": "^1.7.8"
   },
   "devDependencies": {

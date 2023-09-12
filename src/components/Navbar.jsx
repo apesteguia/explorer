@@ -9,19 +9,45 @@ import { invoke } from "@tauri-apps/api";
 export default function Navbar(props) {
   const [back, setBack] = createSignal(false);
   const [data, setData] = createSignal(false);
+  const [history, setHistory] = createSignal([]);
+
+  const handleClickFolder = (index) => {
+    const folderPath = props.title
+      .split("/")
+      .slice(0, index + 1)
+      .join("/");
+    handleClick(folderPath);
+  };
 
   const handleClick = (folderName) => {
+    let aux = history();
     invoke("go_dir", { folderName });
     setData(true);
     props.onDataFromChild(data());
     setData(false);
+    aux.push(folderName);
+    setHistory(aux);
   };
 
-  const handleBack = async () => {
-    await invoke("go_back");
-    setBack(true);
-    props.onClickBack(back());
-    setBack(false);
+  const handleFront = () => {
+    let folderName = history()[0],
+      aux = history();
+    invoke("go_dir", { folderName });
+    props.onDataFromChild(true);
+    aux.shift();
+    if (history() !== undefined) setHistory(aux);
+  };
+
+  const handleBack = () => {
+    console.log("d", history());
+    let aux = history();
+    invoke("go_back");
+    if (aux !== undefined) {
+      aux.unshift(props.title);
+      setHistory(aux);
+    }
+    console.log(history());
+    props.onClickBack(true);
   };
 
   return (
@@ -30,25 +56,23 @@ export default function Navbar(props) {
         <button onClick={handleBack}>
           <IconArrowLeft />
         </button>
-        <button>
+        <button onClick={handleFront}>
           <IconArrowRight />
         </button>
       </div>
       <Breadcrumbs className="text-white text-sm z-10" aria-label="breadcrumb">
         <For each={props.title.split("/")}>
           {(t, i) => (
-            <button
-              onClick={() => {
-                const folderPath = props.title
-                  .split("/")
-                  .slice(0, i() + 1)
-                  .join("/");
-                handleClick(folderPath);
+            <div
+              key={i}
+              tabIndex="0"
+              onDblClick={() => {
+                handleClickFolder(i());
               }}
               className="hover:underline"
             >
-              {t}
-            </button>
+              <button>{t}</button>
+            </div>
           )}
         </For>
       </Breadcrumbs>

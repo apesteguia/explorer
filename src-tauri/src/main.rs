@@ -3,7 +3,6 @@
 
 //use std::env::current_dir;
 
-
 use std::path::PathBuf;
 
 #[tauri::command]
@@ -125,6 +124,16 @@ fn delete_all(path: &str) -> PathBuf {
     current_dir
 }
 
+#[tauri::command]
+fn read_file(path: &str) -> String {
+    let contents = std::fs::read_to_string(path);
+    let res = match contents {
+        Ok(res) => res,
+        Err(error) => error.to_string(),
+    };
+    res
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -136,6 +145,7 @@ fn main() {
             create_folder,
             create_file,
             delete_all,
+            read_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
