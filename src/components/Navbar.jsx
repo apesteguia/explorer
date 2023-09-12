@@ -65,11 +65,10 @@ export default function Navbar(props) {
           {(t, i) => (
             <div
               key={i}
-              tabIndex="0"
-              onDblClick={() => {
+              onClick={() => {
                 handleClickFolder(i());
               }}
-              className="hover:underline"
+              className="hover:underline "
             >
               <button>{t}</button>
             </div>

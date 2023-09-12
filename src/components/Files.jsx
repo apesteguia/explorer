@@ -2,11 +2,11 @@ import { For, createSignal, onMount } from "solid-js";
 import { invoke } from "@tauri-apps/api";
 import FolderIcon from "../img/folder.svg";
 import FileIcon from "../img/file.svg";
-import hljs from "highlight.js/lib/core";
 import "highlight.js/styles/github.css";
 import "prism-themes/themes/prism-coldark-dark.css";
 import Prism from "prismjs";
 import { IconX } from "@tabler/icons-solidjs";
+import clickOutside from "../functions/clickOutside";
 
 export function Files(props) {
   const [data, setData] = createSignal(false);
@@ -40,7 +40,7 @@ export function Files(props) {
               {(dir, i) => (
                 <button
                   key={i}
-                  className=" flex  w-screen min-h-[45px] items-center  border-slate-700 border-l-0 border-r-0 border-t-0 transition duration-300 ease-in-out hover:bg-slate-800"
+                  className="focus:bg-slate-600 flex  w-screen min-h-[45px] items-center  border-slate-700 border-l-0 border-r-0 border-t-0 transition duration-300 ease-in-out hover:bg-slate-800"
                 >
                   {dir[1] === "File" ? (
                     <div
@@ -52,7 +52,7 @@ export function Files(props) {
                     </div>
                   ) : (
                     <div
-                      onClick={() => handleClick(dir[0])}
+                      onDblClick={() => handleClick(dir[0])}
                       className="ml-2 w-full folder flex items-center gap-3 text-sm"
                     >
                       <img src={FolderIcon} className="w-[40px] h-[40px]" />
@@ -67,7 +67,10 @@ export function Files(props) {
           )}
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div
+          use:clickOutside={() => setOpenFileContent(false)}
+          className="flex flex-col"
+        >
           <div className="fixed w-full h-[27px]  justify-center  bg-slate-950">
             <h1 className="font-bold ml-2 mt-1">{fileName()}</h1>
           </div>
