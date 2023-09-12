@@ -10,6 +10,10 @@ export default function BasicAppBar() {
   const [title, setTitle] = createSignal("");
   const [text, handleText] = createSignal("");
 
+  document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
+
   const displayDirs = async () => {
     const res = await invoke("display_dirs");
     setDirs(res);

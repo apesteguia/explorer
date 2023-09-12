@@ -13,6 +13,25 @@ export function Files(props) {
   const [fileName, setFileName] = createSignal("");
   const [fileContent, setFileContent] = createSignal("");
   const [openFileContent, setOpenFileContent] = createSignal(false);
+  const [pos, setPos] = createSignal({ x: 0, y: 0 });
+  const [menu, setMenu] = createSignal(false);
+  const [menuPos, setMenuPos] = createSignal({ x: 0, y: 0 });
+  const [selected, setSelected] = createSignal("");
+
+  const handlePos = (e) => {
+    setPos({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
+  const handleContextMenu = (e) => {
+    setMenu(true);
+    setMenuPos({
+      x: pos().x,
+      y: pos().y,
+    });
+  };
 
   const readFile = async (path) => {
     let res = await invoke("read_file", { path });
@@ -21,6 +40,7 @@ export function Files(props) {
     let aux = path.split("/").pop();
     console.log("aux", aux);
     setFileName(aux);
+    setMenu(false);
   };
 
   const handleClick = async (folderName) => {
@@ -32,9 +52,38 @@ export function Files(props) {
   };
 
   return (
-    <div className="overflow-hidden overflow-x-auto overflow-y-scroll border border-slate-700 absolute top-[30px] left-[25%] w-[75%] h-[calc(100%-30px)]">
+    <div
+      onMouseMove={handlePos}
+      className="overflow-x-scroll overflow-y-scroll border border-slate-700 fixed top-[30px] left-[25%] w-[75%] h-[calc(100%-30px)]"
+    >
+      {menu() ? (
+        <div
+          use:clickOutside={() => setMenu(false)}
+          className="border border-slate-700 bg-slate-950 -ml-60 absolute w-[150px] h-auto gap-0 flex flex-col "
+          style={{ top: `${menuPos().y}px`, left: `calc(${menuPos().x}px)` }}
+        >
+          <button
+            onClick={() => readFile(selected())}
+            className="text-left  h-[40px] text-sm hover:bg-slate-700"
+          >
+            <p className="ml-5">Open</p>
+          </button>
+          <button className="text-left  h-[40px] text-sm hover:bg-slate-700">
+            <p className="ml-5">Change name</p>
+          </button>
+          <button className="text-left  h-[40px] text-sm hover:bg-red-600">
+            <p className="ml-5">Delete</p>
+          </button>
+        </div>
+      ) : null}
+
       {!openFileContent() ? (
-        <div className="w-max-content flex flex-col gap-2">
+        <div
+          onContextMenu={(e) => {
+            show(e, { props: MENU_ID });
+          }}
+          className="w-max-content overflow-x-auto flex flex-col gap-2"
+        >
           {props !== undefined || fileContent.data().lenght > 0 ? (
             <For each={props.dirs}>
               {(dir, i) => (
@@ -44,6 +93,11 @@ export function Files(props) {
                 >
                   {dir[1] === "File" ? (
                     <div
+                      onContextMenu={(e) => {
+                        handleContextMenu(e);
+                        setSelected(props.title + "/" + dir[0]);
+                      }}
+                      onClick={() => setSelected(props.title + "/" + dir[0])}
                       onDblClick={() => readFile(props.title + "/" + dir[0])}
                       className="ml-2 w-full folder flex items-center gap-3 text-sm"
                     >
@@ -71,15 +125,18 @@ export function Files(props) {
           use:clickOutside={() => setOpenFileContent(false)}
           className="flex flex-col"
         >
-          <div className="fixed w-full h-[27px]  justify-center  bg-slate-950">
-            <h1 className="font-bold ml-2 mt-1">{fileName()}</h1>
+          <div className="fixed flex  w-full h-[27px]  items-center  bg-slate-950">
+            <div className="flex gap-3 items-center justify-center w-auto border border-r-0 border-t-0 border-l-0 border-b-cyan-600 hover:bg-slate-700  ">
+              <h1 className="font-bold ml-2 ">{fileName()}</h1>
+              <button
+                className=" flex items-center justify-center"
+                onClick={() => setOpenFileContent(false)}
+              >
+                <IconX size={15} className="" />
+              </button>
+            </div>
           </div>
-          <button
-            className="fixed right-5 mt-5"
-            onClick={() => setOpenFileContent(false)}
-          >
-            <IconX />
-          </button>
+
           <pre className="ml-5 text-sm mt-10">
             <code
               className={`language-${props.language || "markup"}`}
