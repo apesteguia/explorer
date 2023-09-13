@@ -11,7 +11,7 @@ export default function BasicAppBar() {
   const [text, handleText] = createSignal("");
 
   document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
+    //e.preventDefault();
   });
 
   const displayDirs = async () => {
@@ -37,7 +37,7 @@ export default function BasicAppBar() {
   });
 
   return (
-    <div className="absolute inset-0 flex w-full min-h-full h-auto bg-zinc-900 text-white">
+    <div className="fixed inset-0 flex min-h-screen  w-full  h-auto bg-zinc-900 text-white">
       <Navbar
         onDataFromChild={handleRefresh}
         onClickBack={handleRefresh}

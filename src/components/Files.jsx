@@ -3,7 +3,8 @@ import { invoke } from "@tauri-apps/api";
 import FolderIcon from "../img/folder.svg";
 import FileIcon from "../img/file.svg";
 import "highlight.js/styles/github.css";
-import "prism-themes/themes/prism-coldark-dark.css";
+//import "prism-themes/themes/prism-coldark-dark.css";
+import "prism-themes/themes/prism-vsc-dark-plus.css";
 import Prism from "prismjs";
 import { IconX } from "@tabler/icons-solidjs";
 import clickOutside from "../functions/clickOutside";
@@ -54,7 +55,7 @@ export function Files(props) {
   return (
     <div
       onMouseMove={handlePos}
-      className="overflow-x-scroll overflow-y-scroll border border-gray-700 fixed top-[30px] left-[25%] w-[75%] h-[calc(100%-30px)]"
+      className="overflow-x-scroll overflow-y-scroll mt-5  fixed top-[30px] left-[20%] w-[80%] h-[calc(100%-40px)]"
     >
       {menu() ? (
         <div
@@ -82,14 +83,14 @@ export function Files(props) {
           onContextMenu={(e) => {
             show(e, { props: MENU_ID });
           }}
-          className="w-max-content overflow-x-auto flex flex-col gap-2"
+          className="w-max-content ml-10 overflow-x-auto mt-5 flex flex-col gap-2"
         >
           {props !== undefined || fileContent.data().lenght > 0 ? (
             <For each={props.dirs}>
               {(dir, i) => (
                 <button
                   key={i}
-                  className="focus:bg-slate-600 flex  w-screen min-h-[45px] items-center  border-gray-700 border-l-0 border-r-0 border-t-0 transition duration-300 hover:bg-slate-800"
+                  className="focus:bg-slate-600 w-[95%] flex rounded-md  min-h-[45px] items-center  border-gray-700 border-l-0 border-r-0 border-t-0 transition duration-300 hover:bg-zinc-800"
                 >
                   {dir[1] === "File" ? (
                     <div

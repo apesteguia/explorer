@@ -3,9 +3,10 @@ import { IconArrowRight } from "@tabler/icons-solidjs";
 import { IconArrowLeft } from "@tabler/icons-solidjs";
 import { Breadcrumbs, Link } from "@suid/material";
 import { IconSearch } from "@tabler/icons-solidjs";
-import { IconMenu2 } from "@tabler/icons-solidjs";
 import { invoke } from "@tauri-apps/api";
 import clickOutside from "../functions/clickOutside";
+import { IconX } from "@tabler/icons-solidjs";
+import { IconDotsVertical } from "@tabler/icons-solidjs";
 
 export default function Navbar(props) {
   const [search, setSearch] = createSignal("");
@@ -67,7 +68,7 @@ export default function Navbar(props) {
   };
 
   return (
-    <div className="border  border-gray-700 inset-0 fixed w-full h-[30px] flex items-center gap-3">
+    <div className="  inset-0 fixed left-[20%] w-[80%] h-[40px] flex items-center gap-3">
       <div className="navigation flex gap-3 ml-3">
         <button
           className="rounded-full flex items-center justify-center hover:bg-gray-700 transition duration-300 "
@@ -84,9 +85,9 @@ export default function Navbar(props) {
       </div>
 
       {!toggleSearch() ? (
-        <div>
-          <Breadcrumbs
-            className="text-white text-sm z-10"
+        <div className=" w-[80%] rounded-md bg-zinc-800 gap-3 flex items-center">
+          <div
+            className="text-white w-[90%]  text-sm z-10 overflow-hidden items-center flex h-[30px]"
             aria-label="breadcrumb"
           >
             <For each={props.title.split("/")}>
@@ -98,29 +99,27 @@ export default function Navbar(props) {
                   }}
                   className=""
                 >
-                  <button className="hover:underline rounded-lg transition duration-300 hover:bg-zinc-600 bg-zinc-700 pl-2 pr-2">
-                    {t}
+                  <button className=" rounded-lg transition duration-300 flex gap-2 p-1 ">
+                    <p className="hover:underline truncate break-words">{t}</p>{" "}
+                    <p>/</p>
                   </button>
                 </div>
               )}
             </For>
-          </Breadcrumbs>
-          <button
-            onClick={() => setToggleSearch(true)}
-            className="absolute -mt-5 right-14"
-          >
+          </div>
+          <button onClick={() => setToggleSearch(true)} className="">
             <IconSearch size={20} className="" />
           </button>
         </div>
       ) : (
         <form
           onSubmit={handleForm}
-          className="border   border-zinc-600  flex w-[90%] bg-zinc-800 overflow-hidden rounded-md focus:bg-zinc-700"
+          className=" w-[80%] rounded-md bg-zinc-800  flex items-center h-[30px] focus:bg-zinc-700"
           use:clickOutside={setToggleSearch(false)}
         >
           <IconSearch
-            className="bg-zinc-700 indent-3 rounded-full flex items-center justify-center p-1 "
-            size={20}
+            className="ml-1 indent-3 rounded-full flex items-center justify-center p-1 "
+            size={26}
           />
           <input
             onChange={handleSearch}
@@ -128,12 +127,16 @@ export default function Navbar(props) {
             value={props.title}
             className="bg-zinc-800 indent-3 rounded-sm transition duration-300  w-full outline-none text-white text-sm "
           />
+          <button className="mr-2">
+            <IconX />
+          </button>
         </form>
       )}
-
-      <button className="absolute right-5">
-        <IconMenu2 size={20} className="" />
-      </button>
+      <div>
+        <button className="flex items-center justify-center mr-2">
+          <IconDotsVertical />
+        </button>
+      </div>
     </div>
   );
 }
